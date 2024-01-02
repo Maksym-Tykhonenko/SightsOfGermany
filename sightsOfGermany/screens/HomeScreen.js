@@ -3,6 +3,8 @@ import { View, ImageBackground, ScrollView, Text, TouchableOpacity, Image, Alert
 import sightsData from '../data/sightsData'; // Передбачується, що це шлях до вашого файлу даних
 
 import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const allSights = [
     {
@@ -62,12 +64,48 @@ const HomeScreen = ({navigation}) => {
     //console.log('==>', actButnTitle, actBtnImg)
    
     const [btnIsVisible, setBtnIsVisible] = useState(false);
-    const [quizIsComplited, setQuizIsComplited] = useState(true);
+    const [quizIsComplited, setQuizIsComplited] = useState(false);
 
     const goTooAppAfterQuizComplited = () => {
         setBtnIsVisible(false);
         setQuizIsComplited(true);
     };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    useEffect(() => {
+        setData();
+    }, [quizIsComplited]);
+
+    const setData = async () => {
+    try {
+      const data = {
+          quizIsComplited
+      }
+      const jsonData = JSON.stringify(data);
+      await AsyncStorage.setItem("HomeScreen", jsonData);
+      console.log('Дані збережено в AsyncStorage')
+    } catch (e) {
+      console.log('Помилка збереження даних:', e);
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const jsonData = await AsyncStorage.getItem('HomeScreen');
+      if (jsonData !== null) {
+        const parsedData = JSON.parse(jsonData);
+        console.log('parsedData==>', parsedData);
+          setQuizIsComplited(parsedData.quizIsComplited)
+        
+      }
+    } catch (e) {
+      console.log('Помилка отримання даних:', e);
+    }
+  };
+
 
     useEffect(() => {
         setBtnIsVisible(false)
@@ -124,8 +162,8 @@ const HomeScreen = ({navigation}) => {
                 source={require('../accets/bgr.jpeg')}>
                 
                 {quizIsComplited ? (
-                    <View style={{ flex: 1, paddingTop: 20 }}>
-                        <View style={{ alignItems: 'center' }}>
+                    <View style={{ flex: 1, paddingTop: 30, position: 'relative' }}>
+                        <View style={{ alignItems: 'center', marginTop: 25 }}>
                             <Text style={{ color: 'gold', fontSize: 25, fontWeight: 'bold' }}>Which sights do you want to visit in France or Germany?</Text>
                         </View>
 
@@ -156,14 +194,14 @@ const HomeScreen = ({navigation}) => {
                             
                                 <TouchableOpacity
                                     style={{ marginBottom: 10, width: '100%', height: 40, borderWidth: 2, borderColor: 'gold', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}
-                                    onPress={() => navigation.navigate('Casino')}
+                                    onPress={() => navigation.navigate('Casino', {name: 'Main Casino'})}
                                 >
                                     <Text style={{ color: 'gold', fontWeight: 'bold', fontSize: 17 }}>Main Casino</Text>
                                 </TouchableOpacity>
                             
                                 <TouchableOpacity
                                     style={{ marginBottom: 10, width: '100%', height: 40, borderWidth: 2, borderColor: 'gold', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}
-                                    onPress={() => navigation.navigate('ShoppingCenter')}
+                                    onPress={() => navigation.navigate('ShoppingCenter', )}
                                 >
                                     <Text style={{ color: 'gold', fontWeight: 'bold', fontSize: 17 }}>Main Shopping Center</Text>
                                 </TouchableOpacity>
@@ -206,13 +244,21 @@ const HomeScreen = ({navigation}) => {
                             </ScrollView>
                            
                            
-                           
-                            
+                          
                         </View>
+
+                         <TouchableOpacity
+                                    onPress={() => navigation.navigate('MyProfile')}
+                                    style={{position: 'absolute', top: 15, left: 0 }}
+                                        
+                                >
+                                    <MaterialCommunityIcons name='face-man' style={{ color: 'gold', fontSize: 40 }} />
+                                </TouchableOpacity>
+                            
 
                     </View>
                 ) : (
-                    <View style={{ flex: 1, position: 'relative', marginTop: 10, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
+                    <View style={{ flex: 1, position: 'relative', marginTop: 30, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
 
                         {/* Блок кнопок з назвами */}
                         <View style={{ flex: 0.5, alignItems: 'center' }}>

@@ -16,6 +16,11 @@ import Circus from './screens/sightsScreens/circus';
 import Theater from './screens/sightsScreens/theater';
 import Nightclub from './screens/sightsScreens/nightclub';
 import Museum from './screens/sightsScreens/museum';
+import Details from './screens/sightsScreens/Details';
+import NewDetails from './screens/sightsScreens/NewDetails';
+import MyProfile from './screens/MyProfile';
+
+
 
 
 
@@ -44,6 +49,9 @@ const App = () => {
                 <Stack.Screen options={{ headerShown: false }} name="Theater" component={Theater} />
                 <Stack.Screen options={{ headerShown: false }} name="Nightclub" component={Nightclub} />
                 <Stack.Screen options={{ headerShown: false }} name="Museum" component={Museum} />
+                <Stack.Screen options={{ headerShown: false }} name="Details" component={Details} />
+                <Stack.Screen options={{ headerShown: false }} name="NewDetails" component={NewDetails} />
+                <Stack.Screen options={{ headerShown: false }} name="MyProfile" component={MyProfile} />
 
             </Stack.Navigator>
         );
